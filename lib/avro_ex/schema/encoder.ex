@@ -41,7 +41,7 @@ defmodule AvroEx.Schema.Encoder do
     config = update_in(config.namespace, &Schema.namespace(struct, &1))
 
     data =
-      for {k, v} <- extract(struct), not empty?(v), keep?(k, config), into: %{} do
+      for {k, v} <- extract(struct), not empty?(v) or k == "default", keep?(k, config), into: %{} do
         case k do
           k when k in [:values, :items, :type] -> {k, do_encode(v, config)}
           :fields -> {k, Enum.map(v, &do_encode(&1, config))}
